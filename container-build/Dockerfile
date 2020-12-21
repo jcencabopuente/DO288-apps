@@ -3,9 +3,12 @@ FROM quay.io/redhattraining/httpd-parent
 
 EXPOSE 8080
 
-RUN rm -rf /run/httpd && mkdir /run/httpd && \
-    chgrp -R 0 /run/httpd && \
-    chmod -R g=u /run/httpd
+LABEL io.openshift.expose-services="8080:http"
+
+RUN sed -i "s/Listen 80/Listen 8080/g" /etc/httpd/conf/httpd.conf
+
+RUN chgrp -R 0 /var/run/httpd /var/log/httpd && \
+    chmod -R g=u /run/httpd /var/log/httpd
 
 USER 1001
 
